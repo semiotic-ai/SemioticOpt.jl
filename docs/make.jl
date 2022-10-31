@@ -12,15 +12,18 @@ makedocs(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://semiotic-ai.github.io/SemioticOpt.jl",
         edit_link="main",
-        assets=String[],
+        assets=String[]
     ),
     pages=[
         "Home" => "index.md",
-    ],
+        "Algorithms" => "algorithms.md",
+        "Hooks" => "hooks.md",
+        "API" => "api.md",
+    ]
 )
 
 deploydocs(;
     repo="github.com/semiotic-ai/SemioticOpt.jl",
     devbranch="main",
-    devurl="latest",
+    devurl="latest"
 )

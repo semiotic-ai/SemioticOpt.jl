@@ -1,6 +1,10 @@
+# Copyright 2022-, Semiotic AI, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 using SemioticOpt
+using LinearAlgebra
 using Test
 
-@testset "SemioticOpt.jl" begin
-    # Write your tests here.
+for f in readlines(joinpath(@__DIR__, "testgroups"))
+    include(f * ".jl")
 end
