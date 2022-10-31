@@ -22,4 +22,5 @@ makedocs(;
 deploydocs(;
     repo="github.com/semiotic-ai/SemioticOpt.jl",
     devbranch="main",
+    devurl="latest",
 )
