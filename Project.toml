@@ -1,0 +1,7 @@
+name = "SemioticOpt"
+uuid = "a0c0fc10-8635-40d2-82ff-39f738735ee1"
+authors = ["Semiotic Labs"]
+version = "0.1.0"
+
+[compat]
+julia = "1.8"
