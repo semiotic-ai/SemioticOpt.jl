@@ -1,7 +1,7 @@
 # Copyright 2022-, Semiotic AI, Inc.
 # SPDX-License-Identifier: Apache-2.0
 
-export minimize, minimize!
+export minimize, minimize!, stepsize
 
 """
     minimize(f::Function, a::OptAlgorithm)
@@ -57,3 +57,10 @@ function maybeminimize!(f::Function, a::OptAlgorithm, op::Function)
     a = op(a, z)
     return a
 end
+
+"""
+    stepsize(l::Real)
+
+Return the optimal step size for a convex function with Lipschitz constant `l`.
+"""
+stepsize(l::Real) = 2.0 / l

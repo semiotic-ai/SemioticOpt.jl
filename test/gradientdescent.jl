@@ -12,9 +12,14 @@
     distfromzero(n) = norm([0.0, 0.0] - x(n))
     f(x) = sum(x .^ 2)
     @testset "iteration" begin
-        g = makegd()
+        lipschitzconstant = 2
+        g = GradientDescent(;
+            x=[100.0, 50.0],
+            η=stepsize(lipschitzconstant),
+            hooks=[StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 1.0)]
+        )
         z = SemioticOpt.iteration(f, g)
-        @test z == [80.0, 40.0]
+        @test z == [-100.0, -50.0]
     end
 
     @testset "minimize" begin
@@ -26,6 +31,7 @@
         gsmall = makegd()
         nlarge = minimize(f, glarge)
         nsmall = minimize(f, gsmall)
+        println("b")
         @test x(gsmall) != x(nsmall)  # Check has not mutated
         @test distfromzero(nlarge) > distfromzero(nsmall)  # Check that as ϵ→0, solution approaches 0
     end

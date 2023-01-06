@@ -11,7 +11,7 @@ Say,
 julia> f(x) = sum(x .^ 2)
 ```
 
-Then you want to create a [Hook](@ref hooks) with the [`SemioticOpt.IsStoppingCondition`](@ref) trait.
+Then, you want to create a [Hook](@ref hooks) with the [`SemioticOpt.IsStoppingCondition`](@ref) trait.
 Else, optimisation will get stuck in an infinite loop.
 
 ```julia
@@ -43,8 +43,6 @@ If you only care about the optimal value of `x`, then grab it using
 julia> SemioticOpt.x(sol)
 ```
 
-
-
 ## Gradient Descent
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Gradient_descent):
@@ -56,6 +54,21 @@ The update rule for gradient descent is ``x_{n+1}=x_n - η∇f(x_n)``.
 
 ```@docs
 SemioticOpt.GradientDescent
+```
+
+### A Quick Interlude: Choosing Step Size
+
+If your function is L-Lipschitz and the optimal point``f^* > -\infty``, then
+``\eta < 2 / L`` will converge to the optimal point.
+Note that ``\eta`` is the step size.
+See [Theorem 4.2](http://users.ece.utexas.edu/~cmcaram/EE381V_2012F/Lecture_4_Scribe_Notes.final.pdf)
+for details.
+So that you don't have to remember this relationship, just know that if you can tell us
+the Lipschitz constant of the function you're trying to minimise, we'll tell you what the
+step size is. 
+
+```@docs
+SemioticOpt.stepsize
 ```
 
 ## Projected Gradient Descent
