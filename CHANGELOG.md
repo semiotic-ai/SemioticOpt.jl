@@ -1,5 +1,12 @@
 # Changelog
 
+# [0.4.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.3.0...v0.4.0) (2023-04-04)
+
+
+### Features
+
+* repeat without diag function ([295ddfd](https://github.com/semiotic-ai/SemioticOpt.jl/commit/295ddfdb11df79b0c63df7022327528327dac75d))
+
 # [0.3.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.2.0...v0.3.0) (2023-04-04)
 
 
