@@ -9,6 +9,7 @@ using Zygote
 
 abstract type OptAlgorithm end
 
+include("vector.jl")
 include("hook/core.jl")
 include("hook/stop.jl")
 include("hook/postiteration.jl")
