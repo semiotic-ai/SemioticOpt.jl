@@ -1,5 +1,12 @@
 # Changelog
 
+# [0.3.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.2.0...v0.3.0) (2023-04-04)
+
+
+### Features
+
+* vector helper functions ([ad7f787](https://github.com/semiotic-ai/SemioticOpt.jl/commit/ad7f7874016ef5a7159e065234d3941135cfe9fc))
+
 # [0.2.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.1.0...v0.2.0) (2023-01-06)
 
 
