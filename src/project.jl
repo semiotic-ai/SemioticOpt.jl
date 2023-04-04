@@ -28,7 +28,7 @@ Reference: http://proceedings.mlr.press/v28/kyrillidis13.pdf
 """
 function gssp(x::AbstractVector{<:Real}, k::Int, σ::Real)
     # Get k biggest indices of x
-    biggest_ixs = partialsortperm(x, 1:k; rev=true)
+    biggest_ixs = klargestixs(x, k)
     # Project the subvector of the biggest indices onto the simplex
     v = x[biggest_ixs]
     vproj = σsimplex(v, σ)
