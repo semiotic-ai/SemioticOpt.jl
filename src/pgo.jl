@@ -106,7 +106,7 @@ julia> out = SemioticOpt.possiblesupports(Val(isfull), k, ixs, n)
 function possiblesupports(::Val{false}, k::Integer, ixs::AbstractVector{<:Integer}, n::Integer)
     nr = k + 1
     nc = n - k
-    s = Matrix{Int32}(undef, nr, nc)'  # transpose to make it column major
+    s = Matrix{Int32}(undef, nc, nr)  # column-major but backwards, so will transpose
     @inbounds s[:, 1:k] .= ixs'
     @inbounds s[:, k+1] .= setdiff(1:n, ixs)
     return s'
@@ -137,7 +137,7 @@ julia> out = SemioticOpt.possiblesupports(Val(isfull), k, ixs, n)
 function possiblesupports(::Val{true}, k::Integer, ixs::AbstractVector{<:Integer}, n::Integer)
     nr = k
     nc = k * (n - k)
-    s = Matrix{Int32}(undef, nr, nc)'  # transpose to make it column major
+    s = Matrix{Int32}(undef, nc, nr)  # column major, but backwards, so will transpose
     @inbounds s[:, 1:(k-1)] .= repeat(repeatwithoutdiag(ixs)'; inner=(Int32(nc / k), 1))
     @inbounds s[:, k] .= repeat(setdiff(1:n, ixs), k)
     return s'
