@@ -107,8 +107,8 @@ function possiblesupports(::Val{false}, k::Integer, ixs::AbstractVector{<:Intege
     nr = k + 1
     nc = n - k
     s = Matrix{Int32}(undef, nr, nc)'  # transpose to make it column major
-    s[:, 1:k] .= ixs'
-    s[:, k+1] .= setdiff(1:n, ixs)
+    @inbounds s[:, 1:k] .= ixs'
+    @inbounds s[:, k+1] .= setdiff(1:n, ixs)
     return s'
 end
 """
@@ -138,7 +138,7 @@ function possiblesupports(::Val{true}, k::Integer, ixs::AbstractVector{<:Integer
     nr = k
     nc = k * (n - k)
     s = Matrix{Int32}(undef, nr, nc)'  # transpose to make it column major
-    s[:, 1:(k-1)] .= repeat(repeatwithoutdiag(ixs)'; inner=(Int32(nc / k), 1))
-    s[:, k] .= repeat(setdiff(1:n, ixs), k)
+    @inbounds s[:, 1:(k-1)] .= repeat(repeatwithoutdiag(ixs)'; inner=(Int32(nc / k), 1))
+    @inbounds s[:, k] .= repeat(setdiff(1:n, ixs), k)
     return s'
 end
