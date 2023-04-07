@@ -18,5 +18,6 @@ include("core.jl")
 include("gradientdescent.jl")
 include("projectedgradientdescent.jl")
 include("halperniteration.jl")
+include("pgo.jl")
 
 end
