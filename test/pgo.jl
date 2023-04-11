@@ -9,13 +9,23 @@
         out = SemioticOpt.currentsupport(x, kmax)
         @test out == [1, 3]
 
-        kmax = 4
         x = [0.0, 0.0, 0.0, 0.0]
         out = SemioticOpt.currentsupport(x, kmax)
         @test out == []
     end
 
     @testset "possiblesupports" begin
+        ixs = Int32[]
+        n = 4
+        isfull = false
+        k = length(ixs)
+        out = SemioticOpt.possiblesupports(Val(isfull), k, ixs, n)
+        @test out |> size == (k + 1, n - k)
+        @test out[:, 1] == [1]
+        @test out[:, 2] == [2]
+        @test out[:, 3] == [3]
+        @test out[:, 4] == [4]
+
         ixs = 1:2 |> collect
         n = 4
         isfull = false
@@ -24,7 +34,6 @@
         @test out |> size == (k + 1, n - k)
         @test out[:, 1] == [1, 2, 3]
         @test out[:, 2] == [1, 2, 4]
-
 
         isfull = true
         out = SemioticOpt.possiblesupports(Val(isfull), k, ixs, n)
