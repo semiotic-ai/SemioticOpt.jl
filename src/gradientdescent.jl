@@ -1,7 +1,7 @@
 # Copyright 2022-, Semiotic AI, Inc.
 # SPDX-License-Identifier: Apache-2.0
 
-export GradientDescent, x, x!, η, ϵ
+export GradientDescent, x, x!, η
 
 """
     GradientDescent(;x::V, η::T, hooks::S) where {
