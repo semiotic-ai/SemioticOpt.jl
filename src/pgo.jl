@@ -1,6 +1,30 @@
 # Copyright 2022-, Semiotic AI, Inc.
 # SPDX-License-Identifier: Apache-2.0
 
+"""
+    currentsupport(v::AbstractVector{T}, kmax::Integer) where {T<:Real}
+
+Return the current support of `v` with maximum support size `kmax`.
+
+# Example
+```julia
+julia> using SemioticOpt
+julia> kmax = 4
+julia> x = [0.4, 0.0, 0.3, 0.0]
+julia> out = SemioticOpt.currentsupport(x, kmax)
+2-element view(::Vector{Int64}, 1:2) with eltype Int64:
+ 1
+ 3
+julia> x = [0.0, 0.0, 0.0, 0.0]
+julia> out = SemioticOpt.currentsupport(x, kmax)
+0-element view(::Vector{Int64}, 1:0) with eltype Int64
+```
+"""
+function currentsupport(v::AbstractVector{T}, kmax::Integer) where {T<:Real}
+    nnz = v |> nonzeroixs |> length
+    _k = min(kmax, nnz)
+    return klargestixs(v, _k)
+end
 
 """
     possiblesupports(kmax::Integer, ixs::AbstractVector{<:Integer}, n::Integer)

@@ -2,6 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 @testset "pgo" begin
+
+    @testset "currentsupport" begin
+        kmax = 4
+        x = [0.4, 0.0, 0.3, 0.0]
+        out = SemioticOpt.currentsupport(x, kmax)
+        @test out == [1, 3]
+
+        kmax = 4
+        x = [0.0, 0.0, 0.0, 0.0]
+        out = SemioticOpt.currentsupport(x, kmax)
+        @test out == []
+    end
+
     @testset "possiblesupports" begin
         ixs = 1:2 |> collect
         n = 4
