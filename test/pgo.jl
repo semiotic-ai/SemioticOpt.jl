@@ -79,4 +79,28 @@
         SemioticOpt.swap!(x, support, f, makepgd)
         @test x == [0, 0, 1, 0]
     end
+
+    @testset "bestswap" begin
+        f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
+        aa = Float64[1, 1, 1000, 1]
+        bb = Float64[1, 1, 1, 1]
+        f(x, ixs) = f(x, ixs, aa, bb)
+        c = 0.1  # per non-zero cost
+        selection = x -> f(x, 1:length(x)) + c * length(SemioticOpt.nonzeroixs(x))
+
+        function makepgd(v)
+            return ProjectedGradientDescent(;
+                x=v,
+                η=1e-1,
+                hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)],
+                t=v -> σsimplex(v, 1)  # Project onto unit-simplex
+            )
+        end
+        supports = [[1 3]; [2 2]]
+        xinit = zeros(4)
+        v, o = SemioticOpt.bestswap(xinit, supports, selection, f, makepgd)
+        @test v == [0, 0, 1, 0]
+        @test o == -499.9
+    end
+
 end

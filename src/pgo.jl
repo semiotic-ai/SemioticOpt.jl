@@ -194,3 +194,50 @@ function swap!(v::AbstractVector{T}, support::AbstractVector{I}, f, fa) where {T
     v[support] .= x(sol)
     return v
 end
+
+"""
+    bestswap(xinit::AbstractVector{T}, supports::AbstractMatrix{<:Integer}, selection, f, fa) where {T<:Real}
+
+Compute the best swap from `xinit` on s ∈ `supports` for objective `f` and algorithm instantiator `fa`.
+
+# Example
+```julia
+julia> using SemioticOpt
+julia> using LinearAlgebra
+julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
+julia> aa = Float64[1, 1, 1000, 1]
+julia> bb = Float64[1, 1, 1, 1]
+julia> f(x, ixs) = f(x, ixs, aa, bb)
+julia> c = 0.1  # per non-zero cost
+julia> selection = x -> f(x, 1:length(x)) + c * length(SemioticOpt.nonzeroixs(x))
+julia> function makepgd(v)
+           return ProjectedGradientDescent(;
+               x=v,
+               η=1e-1,
+               hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)],
+               t=v -> σsimplex(v, 1)  # Project onto unit-simplex
+           )
+       end
+julia> supports = [[1 3]; [2 2]]
+julia> xinit = zeros(4)
+julia> v, o = SemioticOpt.bestswap(xinit, supports, selection, f, makepgd)
+([0.0, 0.0, 1.0, 0.0], -499.9)
+```
+"""
+function bestswap(xinit::AbstractVector{T}, supports::AbstractMatrix{<:Integer}, selection, f, fa) where {T<:Real}
+    # Pre-allocate
+    npossibilities = size(supports, 2)
+    xs = repeat(xinit, 1, npossibilities)
+    os = zeros(npossibilities)
+
+    # Compute optimal swap
+    _ = map(eachcol(xs), eachcol(supports), 1:npossibilities) do x, support, i  # In-place so don't need to return or assign
+        v = swap!(x, support, f, fa)
+        os[i] = selection(v)
+        return nothing
+    end
+
+    # Find best objective value and return it and the corresponding vector
+    o, ix = findmin(os)
+    return xs[:, ix], o
+end
