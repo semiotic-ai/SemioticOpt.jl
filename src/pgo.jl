@@ -127,7 +127,7 @@ Generate the best swap in-place for `v` on `support` for objective `f` and algor
 Take a look at the following example.
 
 ```julia
-julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x[ixs] .+ b[ixs])) |> sum
+julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
 julia> aa = Float64[1, 1, 1000, 1]
 julia> bb = Float64[1, 1, 1, 1]
 julia> f(x, ixs) = f(x, ixs, aa, bb)
@@ -138,6 +138,8 @@ First, we define the objective function with the extra arguments `a` and `b`.
 Then, we define a new function that takes only `x` and `ixs` and calls the original function with
 hardcoded values for `a` and `b`.
 This is the function that we will pass to `swap!`.
+Importantly, notice that we don't select only `ixs` from `x`.
+This is because SemioticOpt will do that for us.
 
 Now, let's discuss `fa`.
 `fa` is the algorithm instantiator.
@@ -163,7 +165,7 @@ Notice here that we pass in `v` to the algorithm instantiator, which then gets a
 ```julia
 julia> using SemioticOpt
 julia> using LinearAlgebra
-julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x[ixs] .+ b[ixs])) |> sum
+julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
 julia> aa = Float64[1, 1, 1000, 1]
 julia> bb = Float64[1, 1, 1, 1]
 julia> f(x, ixs) = f(x, ixs, aa, bb)

@@ -56,7 +56,7 @@
     end
 
     @testset "swap!" begin
-        f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x[ixs] .+ b[ixs])) |> sum
+        f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
         aa = Float64[1, 1, 1000, 1]
         bb = Float64[1, 1, 1, 1]
         f(x, ixs) = f(x, ixs, aa, bb)
@@ -72,6 +72,10 @@
 
         x = zeros(4)
         support = [1, 2, 3]
+        SemioticOpt.swap!(x, support, f, makepgd)
+        @test x == [0, 0, 1, 0]
+
+        support = [3, 2]
         SemioticOpt.swap!(x, support, f, makepgd)
         @test x == [0, 0, 1, 0]
     end
