@@ -1,6 +1,140 @@
 # Copyright 2022-, Semiotic AI, Inc.
 # SPDX-License-Identifier: Apache-2.0
 
+export PairwiseGreedyOpt, x, x!
+
+"""
+    PairwiseGreedyOpt(; kmax::I, x::V, xinit::V, f::F, a::A, hooks::S) where {
+        I<:Integer,
+        T<:Real,
+        V<:AbstractVector{T},
+        S<:AbstractVecOrTuple{<:Hook},
+        F<:Function,
+        A<:Function,
+    }
+
+Parameters for the pairwise greedy optimization algorithm.
+
+# Fields
+- `kmax::I`: The maximum support size.
+- `x::V`: The current best guess for the solution.
+- `xinit::V`: The initial solution vector.
+- `f::F`: The objective function of the inner loop.
+    This could be, for instance, a convex relaxation of the problem.
+- `a::A`: A function that takes a vector and returns an instance of [`SemioticOpt.OptAlgorithm`](@ref).
+    This is the algorithm that will be used to optimize the objective function `f`.
+- `hooks::S`: A tuple of [`SemioticOpt.Hook`](@ref)s that will be called at various points in the algorithm.
+
+
+`f` and `a` are a bit tricky, so let's discuss them.
+`f` is the objective function. When you define the objective function, know that we need a function of
+`x` and `ixs` (a vector of indices) from you. This is so that we can compute the gradient with
+respect to `x`.
+Take a look at the following example.
+
+```julia
+julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
+julia> aa = Float64[1, 1, 1000, 1]
+julia> bb = Float64[1, 1, 1, 1]
+julia> f(x, ixs) = f(x, ixs, aa, bb)
+```
+
+Notice how this works.
+First, we define the objective function with the extra arguments `a` and `b`.
+Then, we define a new function that takes only `x` and `ixs` and calls the original function with
+hardcoded values for `a` and `b`.
+Importantly, notice that we don't select only `ixs` from `x` in our definition of `f`.
+This is because `SemioticOpt` will do that for us.
+
+Now, let's discuss `a`.
+`a` is the algorithm instantiator.
+It'll take the current `x[ixs]` and return an `OptAlgorithm` that can be used to minimize `f` in-place.
+For example:
+
+```julia
+julia> using SemioticOpt
+julia> using LinearAlgebra
+julia> function makepgd(x)
+            return ProjectedGradientDescent(;
+                x=x,
+                η=1e-1,
+                hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)],
+                t=x -> σsimplex(x, 1)  # Project onto unit-simplex
+            )
+        end
+```
+
+Notice here that we pass in `x` to the algorithm instantiator, which then gets assigned to the field `x`.
+"""
+Base.@kwdef struct PairwiseGreedyOpt{
+    I<:Integer,
+    T<:Real,
+    V<:AbstractVector{T},
+    S<:AbstractVecOrTuple{<:Hook},
+    F<:Function,
+    A<:Function,
+} <: OptAlgorithm
+    kmax::I
+    x::V
+    xinit::V
+    f::F
+    a::A
+    hooks::S
+end
+
+"""
+    x(g::PairwiseGreedyOpt)
+    x(g::PairwiseGreedyOpt, v)
+
+The current best guess for the solution. If using the setter, `v` is the new value.
+
+The setter is not in-place.
+See [`SemioticOpt.x!`](@ref).
+"""
+x(g::PairwiseGreedyOpt) = g.x
+x(g::PairwiseGreedyOpt, v) = @set g.x = v
+"""
+    x!(g::PairwiseGreedyOpt, v)
+
+In-place setting of `g.x` to `v`
+
+See [`SemioticOpt.x`](@ref).
+"""
+function x!(g::PairwiseGreedyOpt, v)
+    g.x .= v
+    return g
+end
+"""
+    kmax(g::PairwiseGreedyOpt)
+
+The maximum support size.
+"""
+kmax(g::PairwiseGreedyOpt) = g.kmax
+"""
+    f(g::PairwiseGreedyOpt)
+
+The objective function of the inner loop.
+"""
+f(g::PairwiseGreedyOpt) = g.f
+"""
+    a(g::PairwiseGreedyOpt)
+
+The algorithm instantiator for the inner loop.
+"""
+a(g::PairwiseGreedyOpt) = g.a
+"""
+    xinit(g::PairwiseGreedyOpt)
+
+The initial solution vector.
+"""
+xinit(g::PairwiseGreedyOpt) = g.xinit
+"""
+    hooks(g::PairwiseGreedyOpt)
+
+The hooks used by the algorithm.
+"""
+hooks(g::PairwiseGreedyOpt) = g.hooks
+
 """
     currentsupport(v::AbstractVector{T}, kmax::Integer) where {T<:Real}
 
@@ -121,46 +255,6 @@ end
 
 Generate the best swap in-place for `v` on `support` for objective `f` and algorithm instantiator `fa`.
 
-`f` and `fa` are a bit tricky, so let's discuss them.
-`f` is the objective function. When you define the objective function, know that we need a function of
-`v` and `support` from you. This is so that we can compute the gradient with respect to `v`.
-Take a look at the following example.
-
-```julia
-julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
-julia> aa = Float64[1, 1, 1000, 1]
-julia> bb = Float64[1, 1, 1, 1]
-julia> f(x, ixs) = f(x, ixs, aa, bb)
-```
-
-Notice how this works.
-First, we define the objective function with the extra arguments `a` and `b`.
-Then, we define a new function that takes only `x` and `ixs` and calls the original function with
-hardcoded values for `a` and `b`.
-This is the function that we will pass to `swap!`.
-Importantly, notice that we don't select only `ixs` from `x`.
-This is because SemioticOpt will do that for us.
-
-Now, let's discuss `fa`.
-`fa` is the algorithm instantiator.
-It'll take the current `v[support]` and return an `OptAlgorithm` that can be used to minimize `f` in-place.
-For example:
-
-```julia
-julia> using SemioticOpt
-julia> using LinearAlgebra
-julia> function makepgd(v)
-            return ProjectedGradientDescent(;
-                x=v,
-                η=1e-1,
-                hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)],
-                t=v -> σsimplex(v, 1)  # Project onto unit-simplex
-            )
-        end
-```
-
-Notice here that we pass in `v` to the algorithm instantiator, which then gets assigned to the field `x`.
-
 # Example
 ```julia
 julia> using SemioticOpt
@@ -240,4 +334,58 @@ function bestswap(xinit::AbstractVector{T}, supports::AbstractMatrix{<:Integer},
     # Find best objective value and return it and the corresponding vector
     o, ix = findmin(os)
     return xs[:, ix], o
+end
+
+"""
+    iteration(obj::Function, alg::PairwiseGreedyOpt)
+
+One iteration of the pairwise greedy optimization algorithm `alg` for objective `obj`.
+
+# Example
+```julia
+julia> using SemioticOpt
+julia> using LinearAlgebra
+julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
+julia> aa = Float64[1, 1, 1000, 1]
+julia> bb = Float64[1, 1, 1, 1]
+julia> f(x, ixs) = f(x, ixs, aa, bb)
+julia> function makepgd(v)
+           return ProjectedGradientDescent(;
+               x=v,
+               η=1e-1,
+               hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)],
+               t=v -> σsimplex(v, 1)  # Project onto unit-simplex
+           )
+       end
+julia> alg = PairwiseGreedyOpt(;
+           kmax=4,
+           x=zeros(4),
+           xinit=zeros(4),
+           f=f,
+           a=makepgd,
+           hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)]
+       )
+julia> c = 0.1  # per non-zero cost
+julia> selection = x -> f(x, 1:length(x)) + c * length(SemioticOpt.nonzeroixs(x))
+julia> z = SemioticOpt.iteration(selection, alg)
+4-element Vector{Float64}:
+ 0.0
+ 0.0
+ 1.0
+ 0.0
+```
+"""
+function iteration(obj::Function, alg::PairwiseGreedyOpt)
+    v = x(alg)
+    k = kmax(alg)
+
+    # Find the current support
+    ixs = currentsupport(v, k)
+
+    # Find all possible next supports
+    supports = possiblesupports(k, ixs, length(v))
+
+    # Find the best swap using the possible supports
+    v, _ = bestswap(xinit(alg), supports, obj, f(alg), a(alg))
+    return v
 end

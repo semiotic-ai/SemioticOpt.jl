@@ -103,4 +103,32 @@
         @test o == -499.9
     end
 
+    @testset "iteration" begin
+        f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
+        aa = Float64[1, 1, 1000, 1]
+        bb = Float64[1, 1, 1, 1]
+        f(x, ixs) = f(x, ixs, aa, bb)
+        function makepgd(v)
+            return ProjectedGradientDescent(;
+                x=v,
+                η=1e-1,
+                hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)],
+                t=v -> σsimplex(v, 1)  # Project onto unit-simplex
+            )
+        end
+        alg = PairwiseGreedyOpt(;
+            kmax=4,
+            x=zeros(4),
+            xinit=zeros(4),
+            f=f,
+            a=makepgd,
+            hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)]
+        )
+
+        c = 0.1  # per non-zero cost
+        selection = x -> f(x, 1:length(x)) + c * length(SemioticOpt.nonzeroixs(x))
+
+        z = SemioticOpt.iteration(selection, alg)
+        @test z == [0, 0, 1, 0]
+    end
 end
