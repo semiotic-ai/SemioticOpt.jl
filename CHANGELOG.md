@@ -1,5 +1,23 @@
 # Changelog
 
+# [0.5.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.4.0...v0.5.0) (2023-04-12)
+
+
+### Features
+
+* Compute best swap across all supports ([e69aa73](https://github.com/semiotic-ai/SemioticOpt.jl/commit/e69aa7301d32d2880882e4c3a3564908d9a91784))
+* Compute the possible supports per iteration ([ea58b66](https://github.com/semiotic-ai/SemioticOpt.jl/commit/ea58b66ac4e362352718542374279b628d2a8f15))
+* Get current support <= length kmax ([d72824f](https://github.com/semiotic-ai/SemioticOpt.jl/commit/d72824f1f2cc1403088d65cf1e14f8694eead5be))
+* Implement the inner loop of PGO ([4dc8c25](https://github.com/semiotic-ai/SemioticOpt.jl/commit/4dc8c257684b866aa0c810936eef9f220d08d235))
+* Implemented the PGO type and one iteration ([7a68378](https://github.com/semiotic-ai/SemioticOpt.jl/commit/7a68378691638c9803a587bf178924ac73a2f5e6))
+* PGOOptFunction type enabling inner loop opt ([ede217f](https://github.com/semiotic-ai/SemioticOpt.jl/commit/ede217f9e7082aea5955cdf286a32e65977428d7))
+
+
+### Performance Improvements
+
+* Remove bounds checking on possiblesupports ([67cf58e](https://github.com/semiotic-ai/SemioticOpt.jl/commit/67cf58e7360d0a300bb5414fd608d4de5615b72d))
+* Use native column-major rather than adjoints ([c20c745](https://github.com/semiotic-ai/SemioticOpt.jl/commit/c20c74563b2a921b3a6318b75da2df31b54d97ca))
+
 # [0.4.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.3.0...v0.4.0) (2023-04-04)
 
 
