@@ -363,7 +363,7 @@ julia> alg = PairwiseGreedyOpt(;
            xinit=zeros(4),
            f=f,
            a=makepgd,
-           hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)]
+           hooks=[StopWhen((a; kws...) -> kws[:f](kws[:z]) ≤ kws[:f](SemioticOpt.x(a)))]
        )
 julia> c = 0.1  # per non-zero cost
 julia> selection = x -> f(x, 1:length(x)) + c * length(SemioticOpt.nonzeroixs(x))
