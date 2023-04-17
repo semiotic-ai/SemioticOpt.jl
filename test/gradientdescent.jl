@@ -31,7 +31,6 @@
         gsmall = makegd()
         nlarge = minimize(f, glarge)
         nsmall = minimize(f, gsmall)
-        println("b")
         @test x(gsmall) != x(nsmall)  # Check has not mutated
         @test distfromzero(nlarge) > distfromzero(nsmall)  # Check that as ϵ→0, solution approaches 0
     end

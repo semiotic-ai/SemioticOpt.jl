@@ -24,8 +24,8 @@ function σsimplex(x::AbstractVector{T}, σ::Real) where {T<:Real}
     ρ = maximum((1:n)[μ-(cumsum(μ).-_σ)./(1:n).>zero(BigFloat)])
     θ = (sum(μ[1:ρ]) - _σ) / ρ
     _w = max.(_x .- θ, zero(BigFloat))
-    _w .= T.(_w, RoundDown)
-    return _w
+    w = T.(_w, RoundDown)
+    return w
 end
 
 """
