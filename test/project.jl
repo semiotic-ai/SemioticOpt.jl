@@ -19,6 +19,10 @@
         x = Float64[23133337391432116]
         σ = 652174.7265297174
         @test sum(σsimplex(x, σ)) ≈ σ  # exact
+
+        x = Float64[22208782.96182339, 856010.8747250779, 340907.03789293]
+        σ = 23405700.874441393
+        @test sum(σsimplex(x, σ)) ≈ σ  # exact
     end
 
     @testset "gssp" begin

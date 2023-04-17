@@ -12,6 +12,9 @@ In other words, project `x`s to be non-negative and sum to `σ`.
 
 This operation is precision-senstive, so we conver the data to bigfloat within the function.
 We then convert back to `T` before returning.
+
+We use RoundDown while converting from BigFloat to `T` to ensure that the sum of the
+projected vector is less than or equal to `σ`.
 """
 function σsimplex(x::AbstractVector{T}, σ::Real) where {T<:Real}
     _x = convert(Vector{BigFloat}, x)
@@ -21,8 +24,8 @@ function σsimplex(x::AbstractVector{T}, σ::Real) where {T<:Real}
     ρ = maximum((1:n)[μ-(cumsum(μ).-_σ)./(1:n).>zero(BigFloat)])
     θ = (sum(μ[1:ρ]) - _σ) / ρ
     _w = max.(_x .- θ, zero(BigFloat))
-    w = convert(Vector{T}, _w)
-    return w
+    _w .= T.(_w, RoundDown)
+    return _w
 end
 
 """
