@@ -65,6 +65,56 @@ julia> function makepgd(x)
 ```
 
 Notice here that we pass in `x` to the algorithm instantiator, which then gets assigned to the field `x`.
+
+Let's also talk `hooks`.
+In general, PGO utilises two stopping hooks, so you must provide these.
+
+```julia
+julia> using SemioticOpt
+julia> hooks=[
+    StopWhen((a; kws...) -> kws[:f](kws[:z]) ≤ kws[:f](SemioticOpt.x(a)))
+    StopWhen(
+        (a; kws...) -> length(kws[:z]) == length(SemioticOpt.nonzeroixs(kws[:z]))
+    )
+],
+```
+
+The first of these stops when the next iteration decreases the value of the objective
+function.
+The second stops when the support size is the length of the vector, meaning that there
+are no more swaps we could make.
+
+# Example
+
+```julia
+julia> using SemioticOpt
+julia> f(x, ixs, a, b) = -((a[ixs] .* x) ./ (x .+ b[ixs])) |> sum
+julia> aa = Float64[1, 1, 1000, 1]
+julia> bb = Float64[1, 1, 1, 1]
+julia> f(x, ixs) = f(x, ixs, aa, bb)
+julia> function makepgd(v)
+           return ProjectedGradientDescent(;
+               x=v,
+               η=1e-1,
+               hooks=[StopWhen((a; kws...) -> norm(SemioticOpt.x(a) - kws[:z]) < 1.0)],
+               t=v -> σsimplex(v, 1)  # Project onto unit-simplex
+           )
+       end
+julia> alg = PairwiseGreedyOpt(;
+           kmax=4,
+           x=zeros(4),
+           xinit=zeros(4),
+           f=f,
+           a=makepgd,
+           hooks=[
+               StopWhen((a; kws...) -> kws[:f](kws[:z]) ≤ kws[:f](SemioticOpt.x(a))),
+               StopWhen(
+                   (a; kws...) -> length(kws[:z]) == length(SemioticOpt.nonzeroixs(kws[:z]))
+               )
+           ]
+       )
+PairwiseGreedyOpt{Int64, Float64, Vector{Float64}, Vector{StopWhen}, typeof(f), typeof(makepgd)}(4, [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], f, makepgd, StopWhen[StopWhen(var"#7#11"()), StopWhen(var"#9#12"())])
+```
 """
 Base.@kwdef struct PairwiseGreedyOpt{
     I<:Integer,
