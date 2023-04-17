@@ -16,6 +16,7 @@ function σsimplex(x::AbstractVector{T}, σ::Real) where {T<:Real}
     ρ = maximum((1:n)[μ - (cumsum(μ) .- σ) ./ (1:n) .> zero(T)])
     θ = (sum(μ[1:ρ]) - σ) / ρ
     w = max.(x .- θ, zero(T))
+    w[end] += σ - sum(w)
     return w
 end
 
