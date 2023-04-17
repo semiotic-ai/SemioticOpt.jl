@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.5.0...v0.5.1) (2023-04-17)
+
+
+### Bug Fixes
+
+* force exact numeric sum - simplex projection ([97a5703](https://github.com/semiotic-ai/SemioticOpt.jl/commit/97a5703ba341c06af7f3ea6bbb77b209cd21e7b7))
+
 # [0.5.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.4.0...v0.5.0) (2023-04-12)
 
 
