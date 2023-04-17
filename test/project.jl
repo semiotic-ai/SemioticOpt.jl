@@ -14,6 +14,11 @@
         x = Float64[-1, 0, 0]
         σ = 5
         @test σsimplex(x, σ) ≈ [1, 2, 2]  # Scale up
+
+        # Credit @hopeyen
+        x = Float64[23133337391432116]
+        σ = 652174.7265297174
+        @test sum(σsimplex(x, σ)) ≈ σ  # exact
     end
 
     @testset "gssp" begin

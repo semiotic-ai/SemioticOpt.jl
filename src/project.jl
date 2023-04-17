@@ -9,13 +9,19 @@ export σsimplex, gssp
 Project `x` onto the `σ`-simplex.
 
 In other words, project `x`s to be non-negative and sum to `σ`.
+
+This operation is precision-senstive, so we conver the data to bigfloat within the function.
+We then convert back to `T` before returning.
 """
 function σsimplex(x::AbstractVector{T}, σ::Real) where {T<:Real}
-    n = length(x)
-    μ = sort(x; rev=true)
-    ρ = maximum((1:n)[μ - (cumsum(μ) .- σ) ./ (1:n) .> zero(T)])
-    θ = (sum(μ[1:ρ]) - σ) / ρ
-    w = max.(x .- θ, zero(T))
+    _x = convert(Vector{BigFloat}, x)
+    _σ = convert(BigFloat, σ)
+    n = length(_x)
+    μ = sort(_x; rev=true)
+    ρ = maximum((1:n)[μ-(cumsum(μ).-_σ)./(1:n).>zero(BigFloat)])
+    θ = (sum(μ[1:ρ]) - _σ) / ρ
+    _w = max.(_x .- θ, zero(BigFloat))
+    w = convert(Vector{T}, _w)
     return w
 end
 
