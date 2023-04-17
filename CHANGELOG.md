@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.2](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.5.1...v0.5.2) (2023-04-17)
+
+
+### Bug Fixes
+
+* Correct output type of simplex projection ([912cefe](https://github.com/semiotic-ai/SemioticOpt.jl/commit/912cefe4833d4b999c7720e9b7a9e849807392dd))
+* Use round down when doing bigfloat to float ([d070043](https://github.com/semiotic-ai/SemioticOpt.jl/commit/d070043ffe14b6c643650663d2d42e2b0db4bb8a))
+
 ## [0.5.1](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.5.0...v0.5.1) (2023-04-17)
 
 
