@@ -72,7 +72,7 @@ In general, PGO utilises two stopping hooks, so you must provide these.
 ```julia
 julia> using SemioticOpt
 julia> hooks=[
-    StopWhen((a; kws...) -> kws[:f](kws[:z]) ≤ kws[:f](SemioticOpt.x(a)))
+    StopWhen((a; kws...) -> kws[:f](kws[:z]) ≥ kws[:f](SemioticOpt.x(a)))
     StopWhen(
         (a; kws...) -> length(kws[:z]) == length(SemioticOpt.nonzeroixs(kws[:z]))
     )
@@ -107,7 +107,7 @@ julia> alg = PairwiseGreedyOpt(;
            f=f,
            a=makepgd,
            hooks=[
-               StopWhen((a; kws...) -> kws[:f](kws[:z]) ≤ kws[:f](SemioticOpt.x(a))),
+               StopWhen((a; kws...) -> kws[:f](kws[:z]) ≥ kws[:f](SemioticOpt.x(a))),
                StopWhen(
                    (a; kws...) -> length(kws[:z]) == length(SemioticOpt.nonzeroixs(kws[:z]))
                )
@@ -413,7 +413,7 @@ julia> alg = PairwiseGreedyOpt(;
            xinit=zeros(4),
            f=f,
            a=makepgd,
-           hooks=[StopWhen((a; kws...) -> kws[:f](kws[:z]) ≤ kws[:f](SemioticOpt.x(a)))]
+           hooks=[StopWhen((a; kws...) -> kws[:f](kws[:z]) ≥ kws[:f](SemioticOpt.x(a)))]
        )
 julia> c = 0.1  # per non-zero cost
 julia> selection = x -> f(x, 1:length(x)) + c * length(SemioticOpt.nonzeroixs(x))
