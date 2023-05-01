@@ -15,7 +15,7 @@
         η=1e-1,
         hooks=[
             StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 2.0),
-            HalpernIteration(; x₀=[10, 10], λ=k -> 1 / k),
+            HalpernIteration(; x₀=[10, 10], λ=k -> 1 / (k - 1)),
         ]
     )
     f(x) = sum(x .^ 2)
