@@ -34,14 +34,14 @@ PostIterationTrait(::Type) = DontRunAfterIteration()
 
 """
     postiterationhook(
-        hs::AbstractVecOrTuple{H}, a::OptAlgorithm, z::AbstractVector{T}; locals...
-    ) where {H<:Hook,T<:Real}
+        hs::H, a::OptAlgorithm, z::AbstractVector{T}; locals...
+    ) where {H<:Hooks,T<:Real}
 
 Run hooks that the code should execute after [`SemioticOpt.iteration`](@ref).
 """
 function postiteration(
-    hs::AbstractVecOrTuple{H}, a::OptAlgorithm, z::AbstractVector{T}; locals...
-) where {H<:Hook,T<:Real}
+    hs::H, a::OptAlgorithm, z::AbstractVector{T}; locals...
+) where {H<:Hooks,T<:Real}
     for h in hs
         z = postiterationhook(h, a, z; locals...)
     end

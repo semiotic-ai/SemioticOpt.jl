@@ -36,14 +36,14 @@ struct IsNotStoppingCondition <: StopTrait end
 StopTrait(::Type) = IsNotStoppingCondition()
 
 """
-    shouldstop(hs::AbstractVecOrTuple{H}, a::OptAlgorithm; locals...)
+    shouldstop(hs::Hooks, a::OptAlgorithm; locals...)
 
 Map over the hooks `hs` to check for stopping conditions.
 
 This performs an `OR` operation if there are multiple hooks that have the
 [`SemioticOpt.IsStoppingCondition`](@ref) trait.
 """
-function shouldstop(hs::AbstractVecOrTuple{H}, a::OptAlgorithm; locals...) where {H<:Hook}
+function shouldstop(hs::H, a::OptAlgorithm; locals...) where {H<:Hooks}
     return any(map(h -> stophook(h, a; locals...), hs))
 end
 
