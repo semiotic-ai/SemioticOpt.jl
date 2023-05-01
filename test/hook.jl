@@ -38,10 +38,10 @@
         @test_throws Exception postiterationhook(h, a, z; Dict()...)
     end
 
-    # @testset "Logger" begin
-    #     stop = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
-    #     h = Logger(name="i", data=Int32[], f=(a; kws...) -> kws[:i])
-    #     i = counter((h, stop), a)
-    #     @test data(h) == 1:5 |> collect
-    # end
+    @testset "VectorLogger" begin
+        stop = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
+        h = VectorLogger(name="i", data=Int32[], f=(a; kws...) -> kws[:i])
+        i = counter((h, stop), a)
+        @test SemioticOpt.data(h) == 1:5 |> collect
+    end
 end
