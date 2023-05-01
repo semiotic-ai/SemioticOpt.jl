@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.1...v0.6.2) (2023-05-01)
+
+
+### Bug Fixes
+
+* PGO swapping did not set non support to 0 ([144b9dd](https://github.com/semiotic-ai/SemioticOpt.jl/commit/144b9ddcc1db13da68d763d80f826b1fb7758788))
+
 ## [0.6.1](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.0...v0.6.1) (2023-05-01)
 
 
