@@ -1,5 +1,17 @@
 # Changelog
 
+# [0.6.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.5.2...v0.6.0) (2023-05-01)
+
+
+### Bug Fixes
+
+* Post-iteration hook applied after first iter ([450c5e7](https://github.com/semiotic-ai/SemioticOpt.jl/commit/450c5e7f178de45bd770783066c5fe2499ceb6c9))
+
+
+### Features
+
+* Logger to store data in a vector ([27b07c2](https://github.com/semiotic-ai/SemioticOpt.jl/commit/27b07c283f953d13c62939b3d96bd96402ca83f4))
+
 ## [0.5.2](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.5.1...v0.5.2) (2023-04-17)
 
 
