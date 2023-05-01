@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.0...v0.6.1) (2023-05-01)
+
+
+### Bug Fixes
+
+* Iteration count starts at 1 instead of 0 ([f84df60](https://github.com/semiotic-ai/SemioticOpt.jl/commit/f84df60ddba593c5d2dcb57dc7aef72f1c536eec))
+
 # [0.6.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.5.2...v0.6.0) (2023-05-01)
 
 
