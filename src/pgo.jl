@@ -376,6 +376,7 @@ function bestswap(xinit::AbstractVector{T}, supports::AbstractMatrix{<:Integer},
 
     # Compute optimal swap
     _ = map(eachcol(xs), eachcol(supports), 1:npossibilities) do x, support, i  # In-place so don't need to return or assign
+        x[Not(support)] .= zero(T)
         v = swap!(x, support, f, fa)
         os[i] = selection(v)
         return nothing

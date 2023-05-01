@@ -6,6 +6,7 @@ using Accessors
 using Lazy
 using LinearAlgebra
 using Zygote
+using InvertedIndices
 
 abstract type OptAlgorithm end
 
