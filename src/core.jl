@@ -48,11 +48,13 @@ This function is unexported.
 function maybeminimize!(f::Function, a::OptAlgorithm, op::Function)
     z = iteration(f, a)
     i = 0
+    z = postiteration(hooks(a), a, z; Base.@locals()...)
+
     while !shouldstop(hooks(a), a; Base.@locals()...)
         a = op(a, z)
         z = iteration(f, a)
-        z = postiteration(hooks(a), a, z; Base.@locals()...)
         i += 1
+        z = postiteration(hooks(a), a, z; Base.@locals()...)
     end
     a = op(a, z)
     return a
