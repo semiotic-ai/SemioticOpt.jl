@@ -14,5 +14,7 @@ SemioticOpt.shouldstop
 SemioticOpt.x
 SemioticOpt.x!
 SemioticOpt.x₀
+SemioticOpt.name
+SemioticOpt.data
 ```
 

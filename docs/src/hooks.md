@@ -57,6 +57,7 @@ Hooks always descend from the same abstract type.
 
 ```@docs
 SemioticOpt.Hook
+SemioticOpt.Hooks
 ```
 
 Generally speaking, pre-defined hooks won't exhibit any positive traits unless explicitly documented otherwise.
@@ -101,13 +102,50 @@ This takes variables from the local scope (in this case, from the `counter` scop
 and tracks them as a dictionary of symbols.
 Thus, since `i` is a local variable inside of `counter`, `:i` becomes a key in the
 `Base.@locals` dictionary.
-We pass this dictionary to the anonymouse function stored by `StopWhen`.
+We pass this dictionary to the anonymous function stored by `StopWhen`.
 Then, we can use `locals[:i]` to get the value of `i` from the `counter` scope and
 check it against some condition.
 This is a powerful trick you may find yourself using a lot when dealing with hooks.
 
 ```@docs
 SemioticOpt.StopWhen
+```
+
+### VectorLogger
+
+This hook has the [`SemioticOpt.RunAfterIteration`](@ref) trait.
+It's used to log values from the optimisation loop.
+To use it, specify a function that gets a value from the [`SemioticOpt.maybeminimize`](@ref) scope.
+You must also be careful to correctly set the type of the `data` vector. 
+
+
+```julia
+julia> using SemioticOpt
+julia> struct FakeOptAlg <: SemioticOpt.OptAlgorithm end
+julia> a = FakeOptAlg()
+julia> function counter(h, a)
+           i = 0
+           while !shouldstop(h, a; Base.@locals()...)
+               z = [1, 2]
+               i += 1
+               z = postiteration(h, a, z; Base.@locals()...)
+           end
+           return i
+       end
+julia> stop = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
+julia> h = VectorLogger(name="i", data=Int32[], f=(a; kws...) -> kws[:i])
+julia> i = counter((h, stop), a)
+julia> SemioticOpt.data(h)
+5-element Vector{Int32}:
+ 1
+ 2
+ 3
+ 4
+ 5
+```
+
+```@docs
+SemioticOpt.VectorLogger
 ```
 
 ## Create Custom Hooks
