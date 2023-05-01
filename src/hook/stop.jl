@@ -70,7 +70,7 @@ If the hook isn't a stopping condition, it shouldn't be considered in the OR, so
 stophook(::IsNotStoppingCondition, h::Hook, a::OptAlgorithm; locals...) = false
 
 """
-    StopWhen(f::Function)
+    StopWhen{F<:Function}(f::F)
 
 Stops optimisation when some condition is met.
 
@@ -79,10 +79,10 @@ Note that `f` gets access to variables in the [`SemioticOpt.minimize`](@ref) sco
 This means, for example, that it can use `locals[:z]` to compute residuals.
 This has the [`SemioticOpt.IsStoppingCondition`](@ref) trait.
 """
-Base.@kwdef struct StopWhen <: Hook
-    f::Function
+Base.@kwdef struct StopWhen{F<:Function} <: Hook
+    f::F
 end
-StopTrait(::Type{StopWhen}) = IsStoppingCondition()
+StopTrait(::Type{<:StopWhen}) = IsStoppingCondition()
 
 """
 Getter for the stop-function.

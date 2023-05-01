@@ -5,6 +5,15 @@
     struct FakeOptAlg <: SemioticOpt.OptAlgorithm end
     struct FakeHook <: Hook end
     a = FakeOptAlg()
+    function counter(h, a)
+        i = 0
+        while !shouldstop(h, a; Base.@locals()...)
+            z = [1, 2]
+            i += 1
+            z = postiteration(h, a, z; Base.@locals()...)
+        end
+        return i
+    end
 
     @testset "stoptrait" begin
         h = FakeHook()
@@ -15,14 +24,6 @@
     end
 
     @testset "StopWhen" begin
-        function counter(h, a)
-            i = 0
-            while !shouldstop(h, a; Base.@locals()...)
-                i += 1
-            end
-            return i
-        end
-
         h = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
         i = counter((h,), a)
         @test i == 5
@@ -36,4 +37,11 @@
         SemioticOpt.PostIterationTrait(::Type{FakeHook}) = RunAfterIteration()
         @test_throws Exception postiterationhook(h, a, z; Dict()...)
     end
+
+    # @testset "Logger" begin
+    #     stop = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
+    #     h = Logger(name="i", data=Int32[], f=(a; kws...) -> kws[:i])
+    #     i = counter((h, stop), a)
+    #     @test data(h) == 1:5 |> collect
+    # end
 end
