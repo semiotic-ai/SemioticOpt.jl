@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.3...v0.6.4) (2023-05-03)
+
+
+### Bug Fixes
+
+* Possible supports handles case in which k==n ([7be7176](https://github.com/semiotic-ai/SemioticOpt.jl/commit/7be717640f412bca97d401bb176401f8cb723480))
+
 ## [0.6.3](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.2...v0.6.3) (2023-05-03)
 
 
