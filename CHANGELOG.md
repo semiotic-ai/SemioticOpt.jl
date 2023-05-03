@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.3](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.2...v0.6.3) (2023-05-03)
+
+
+### Bug Fixes
+
+* Remove extra assignment from maybeminimize! ([275eb92](https://github.com/semiotic-ai/SemioticOpt.jl/commit/275eb92aafe65389a1114fcf788233034519f021))
+
 ## [0.6.2](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.1...v0.6.2) (2023-05-01)
 
 
