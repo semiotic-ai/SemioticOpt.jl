@@ -14,7 +14,7 @@
         x=[100.0, 50.0],
         η=1e-1,
         hooks=[
-            StopWhen((a; kws...) -> norm(x(a) - kws[:z]) < 2.0),
+            StopWhen((a; kws...) -> kws[:i] > 2),
             HalpernIteration(; x₀=[10, 10], λ=k -> 1 / (k - 1)),
         ]
     )

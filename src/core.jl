@@ -56,7 +56,7 @@ function maybeminimize!(f::Function, a::OptAlgorithm, op::Function)
         i += 1
         z = postiteration(hooks(a), a, z; Base.@locals()...)
     end
-    a = op(a, z)
+
     return a
 end
 
