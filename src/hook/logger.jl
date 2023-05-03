@@ -12,7 +12,7 @@ PostIterationTrait(::Type{<:Logger}) = RunAfterIteration()
 """
     VectorLogger{T,V<:AbstractVector{T},F<:Function} <: Logger
 
-A hook for logging a value specified by `f` into a vector `data`.
+A hook `name` for logging a value specified by `f` into a vector `data`.
 This hook exhibits the [`RunAfterIteration`](@ref) trait.
 
 The value we want to log is returned by `f`.
