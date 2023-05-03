@@ -278,6 +278,9 @@ of the solution vector.
 
 This method runs when the support is full.
 
+In the case where `n == k`, this method will return a an `n` by `1` matrix whose
+elements are just `ixs`.
+
 # Example
 ```julia
 julia> using SemioticOpt
@@ -294,9 +297,13 @@ julia> out = SemioticOpt.possiblesupports(Val(isfull), k, ixs, n)
 function possiblesupports(::Val{true}, k::Integer, ixs::AbstractVector{<:Integer}, n::Integer)
     nr = k
     nc = k * (n - k)
-    s = Matrix{Int32}(undef, nc, nr)  # column major, but backwards, so will transpose
-    @inbounds s[:, 1:(k-1)] .= repeat(repeatwithoutdiag(ixs)'; inner=(Int32(nc / k), 1))
-    @inbounds s[:, k] .= repeat(setdiff(1:n, ixs), k)
+    if nc > 0
+        s = Matrix{Int32}(undef, nc, nr)  # column major, but backwards, so will transpose
+        @inbounds s[:, 1:(k-1)] .= repeat(repeatwithoutdiag(ixs)'; inner=(Int32(nc / k), 1))
+        @inbounds s[:, k] .= repeat(setdiff(1:n, ixs), k)
+    else
+        s = reshape(ixs, 1, n)
+    end
     return s'
 end
 
