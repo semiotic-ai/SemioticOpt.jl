@@ -9,10 +9,31 @@ Abstract type for logging data
 abstract type Logger <: Hook end
 PostIterationTrait(::Type{<:Logger}) = RunAfterIteration()
 
-"""
-    VectorLogger{T,V<:AbstractVector{T},F<:Function} <: Logger
+"""Get the name of the `h`."""
+name(h::Logger) = h.name
+"""Get the function to record data"""
+f(h::Logger) = h.f
+"""Get the frequency at which `h` logs data."""
+frequency(h::Logger) = h.frequency
 
-A hook `name` for logging a value specified by `f` into a vector `data`.
+function postiterationhook(
+    ::RunAfterIteration,
+    h::Logger,
+    a::OptAlgorithm,
+    z::AbstractVector{T};
+    locals...
+) where {T<:Real}
+    if locals[:i] % frequency(h) == 0
+        v = f(h)(a; locals...)
+        logdata(h, v)
+    end
+    return z
+end
+
+"""
+    VectorLogger{I<:Integer,T,V<:AbstractVector{T},F<:Function} <: Logger
+
+A hook `name` for logging a value specified by `f` into a vector `data` at some `frequency`.
 This hook exhibits the [`RunAfterIteration`](@ref) trait.
 
 The value we want to log is returned by `f`.
@@ -33,7 +54,7 @@ julia> function counter(h, a)
            return i
        end
 julia> stop = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
-julia> h = VectorLogger(name="i", data=Int32[], f=(a; kws...) -> kws[:i])
+julia> h = VectorLogger(name="i", frequency=1, data=Int32[], f=(a; kws...) -> kws[:i])
 julia> i = counter((h, stop), a)
 julia> SemioticOpt.data(h)
 5-element Vector{Int32}:
@@ -44,32 +65,14 @@ julia> SemioticOpt.data(h)
  5
 ```
 """
-Base.@kwdef struct VectorLogger{T,V<:AbstractVector{T},F<:Function} <: Logger
+Base.@kwdef struct VectorLogger{I<:Integer,T,V<:AbstractVector{T},F<:Function} <: Logger
     name::String
+    frequency::I
     data::V
     f::F
 end
 
-"""
-    Get the name of the `h`.
-"""
-name(h::VectorLogger) = h.name
-"""
-    Get the data of the `h`.
-"""
+"""Get the data of the `h`."""
 data(h::VectorLogger) = h.data
-"""
-    Get the function to record data
-"""
-f(h::VectorLogger) = h.f
-
-function postiterationhook(
-    ::RunAfterIteration,
-    h::VectorLogger,
-    a::OptAlgorithm,
-    z::AbstractVector{T};
-    locals...
-) where {T<:Real}
-    push!(data(h), f(h)(a; locals...))
-    return z
-end
+"""Log `v` into the vector in `h`"""
+logdata(h::VectorLogger, v) = push!(data(h), v)

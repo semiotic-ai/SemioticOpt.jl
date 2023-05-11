@@ -40,7 +40,7 @@
 
     @testset "VectorLogger" begin
         stop = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
-        h = VectorLogger(name="i", data=Int32[], f=(a; kws...) -> kws[:i])
+        h = VectorLogger(name="i", frequency=1, data=Int32[], f=(a; kws...) -> kws[:i])
         i = counter((h, stop), a)
         @test SemioticOpt.data(h) == 1:5 |> collect
     end
