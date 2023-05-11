@@ -40,6 +40,8 @@ The value we want to log is returned by `f`.
 Note that `f` gets access to variables in the [`SemioticOpt.minimize`](@ref) scope.
 This means, for example, that it can use `locals[:i]` to store the iteration number.
 
+You must also be careful to correctly set the type of the `data` vector.
+
 ```julia
 julia> using SemioticOpt
 julia> struct FakeOptAlg <: SemioticOpt.OptAlgorithm end

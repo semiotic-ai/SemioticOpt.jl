@@ -111,41 +111,16 @@ This is a powerful trick you may find yourself using a lot when dealing with hoo
 SemioticOpt.StopWhen
 ```
 
-### VectorLogger
+### Logging
 
-This hook has the [`SemioticOpt.RunAfterIteration`](@ref) trait.
-It's used to log values from the optimisation loop.
-To use it, specify a function that gets a value from the [`SemioticOpt.maybeminimize`](@ref) scope.
-You must also be careful to correctly set the type of the `data` vector. 
-
-
-```julia
-julia> using SemioticOpt
-julia> struct FakeOptAlg <: SemioticOpt.OptAlgorithm end
-julia> a = FakeOptAlg()
-julia> function counter(h, a)
-           i = 0
-           while !shouldstop(h, a; Base.@locals()...)
-               z = [1, 2]
-               i += 1
-               z = postiteration(h, a, z; Base.@locals()...)
-           end
-           return i
-       end
-julia> stop = StopWhen((a; kws...) -> kws[:i] ≥ 5)  # Stop when i ≥ 5
-julia> h = VectorLogger(name="i", data=Int32[], f=(a; kws...) -> kws[:i])
-julia> i = counter((h, stop), a)
-julia> SemioticOpt.data(h)
-5-element Vector{Int32}:
- 1
- 2
- 3
- 4
- 5
-```
+There are a few different types of Loggers.
+All exhibit the [`SemioticOpt.RunAfterIteration`](@ref) trait.
+They're used to log values from the optimisation loop.
+To use them, specify a function that gets a value from the [`SemioticOpt.maybeminimize`](@ref) scope.
 
 ```@docs
 SemioticOpt.VectorLogger
+SemioticOpt.ConsoleLogger
 ```
 
 ## Create Custom Hooks
