@@ -1,5 +1,12 @@
 # Changelog
 
+# [0.7.0](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.4...v0.7.0) (2023-05-11)
+
+
+### Features
+
+* ConsoleLogger for logging to stdout ([41ceaed](https://github.com/semiotic-ai/SemioticOpt.jl/commit/41ceaed2ec8115b5d53dacc1fd96f11b0cd551e5))
+
 ## [0.6.4](https://github.com/semiotic-ai/SemioticOpt.jl/compare/v0.6.3...v0.6.4) (2023-05-03)
 
 
