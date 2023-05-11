@@ -116,7 +116,7 @@ SemioticOpt.StopWhen
 There are a few different types of Loggers.
 All exhibit the [`SemioticOpt.RunAfterIteration`](@ref) trait.
 They're used to log values from the optimisation loop.
-To use them, specify a function that gets a value from the [`SemioticOpt.maybeminimize`](@ref) scope.
+To use them, specify a function that gets a value from the [`SemioticOpt.maybeminimize!`](@ref) scope.
 
 ```@docs
 SemioticOpt.VectorLogger
