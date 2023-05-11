@@ -3,6 +3,7 @@
 
 using SemioticOpt
 using LinearAlgebra
+using Suppressor
 using Test
 
 for f in readlines(joinpath(@__DIR__, "testgroups"))
