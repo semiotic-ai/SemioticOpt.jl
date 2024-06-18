@@ -11,4 +11,4 @@ abstract type Hook end
 """
     A collection of hooks.
 """
-const Hooks = Union{Vector{<:Hook}, Tuple{Vararg{<:Hook}}}
+const Hooks = Union{Vector{<:Hook}, Tuple{Vararg{Hook}}}

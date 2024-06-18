@@ -6,7 +6,6 @@ DocMeta.setdocmeta!(SemioticOpt, :DocTestSetup, :(using SemioticOpt); recursive=
 makedocs(;
     modules=[SemioticOpt],
     authors="Semiotic Labs",
-    repo="https://github.com/semiotic-ai/SemioticOpt.jl/blob/{commit}{path}#{line}",
     sitename="SemioticOpt.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
