@@ -8,19 +8,12 @@
 
 ## Installation
 
-Make sure you've installed [Julia 1.8 or greater](https://julialang.org/).
+Make sure you've installed [Julia 1.10 or greater](https://julialang.org/).
 From the Julia REPL:
 
 ```julia
 julia> ]
-Pkg> add https://github.com/semiotic-ai/SemioticOpt.jl
-```
-
-To specify a version, use
-
-```julia
-julia> ]
-Pkg> add https://github.com/semiotic-ai/SemioticOpt.jl#v0.1.0
+pkg> add https://github.com/semiotic-ai/SemioticOpt.jl
 ```
 
 ## Citing
